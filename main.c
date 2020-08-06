@@ -188,7 +188,6 @@ main (int argc, char *argv[])
   gst_element_set_state (pipe1, GST_STATE_READY);
 
   g_signal_emit_by_name (webrtc1, "create-data-channel", "channel", NULL, &channel);
-
   gst_element_link (rtp_caps_filter, webrtc1);
 
   bus1 = gst_pipeline_get_bus (GST_PIPELINE (pipe1));
