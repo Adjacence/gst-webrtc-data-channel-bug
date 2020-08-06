@@ -169,9 +169,6 @@ main (int argc, char *argv[])
       G_CALLBACK (_on_ice_candidate), webrtc1);
   g_signal_connect (webrtc2, "on-data-channel", G_CALLBACK (_on_data_channel), NULL);
 
-  gst_element_set_state (webrtc1, GST_STATE_READY);
-  g_signal_emit_by_name (webrtc1, "create-data-channel", "channel", NULL, &channel);
-
   sendbin =
       gst_parse_bin_from_description
       ("videotestsrc ! video/x-raw,framerate=1/1 ! queue ! vp8enc ! rtpvp8pay ! queue ! "
@@ -187,6 +184,10 @@ main (int argc, char *argv[])
   webrtc1 = gst_bin_get_by_name (GST_BIN (pipe1), "send");
   webrtc2 = gst_bin_get_by_name (GST_BIN (pipe1), "recv");
   rtp_caps_filter = gst_bin_get_by_name (GST_BIN (pipe1), "rtp_caps_filter");
+
+  gst_element_set_state (pipe1, GST_STATE_READY);
+
+  g_signal_emit_by_name (webrtc1, "create-data-channel", "channel", NULL, &channel);
 
   gst_element_link (rtp_caps_filter, webrtc1);
 
